@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Master: Cuide e Batalhe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Cuide de um dragão virtual todos os dias. Escolha seu elemento, alimente, brinque e batalhe com outros dragões nesta aventura Tamagotchi premium.">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Tela de Seleção -->
+        <div id="selection-screen" class="screen active">
+            <h1>Criar seu Dragão</h1>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Dê vida ao seu novo companheiro!</p>
+            
+            <div class="creation-form">
+                <div class="form-group">
+                    <label>Nome do Dragão</label>
+                    <input type="text" id="new-dragon-name" placeholder="Ex: Banguela, Spyro..." maxlength="15">
+                </div>
+                
+                <div class="form-group">
+                    <label>Elemento Primário</label>
+                    <div class="dragon-options grid" id="element-selection">
+                        <div class="dragon-card mini selected" onclick="chooseElement('Fogo')">
+                            <span class="dragon-avatar miniature fire">🔥</span>
+                            <p>Fogo</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Água')">
+                            <span class="dragon-avatar miniature water">💧</span>
+                            <p>Água</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Terra')">
+                            <span class="dragon-avatar miniature earth">🌿</span>
+                            <p>Terra</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cor da Aura (Aparência)</label>
+                    <div style="display:flex; align-items: center; justify-content: center; gap: 20px;">
+                        <input type="color" id="new-dragon-color" value="#fb923c">
+                        <div id="preview-avatar" class="dragon-avatar" style="text-shadow: 0 0 25px #fb923c; font-size: 3.5rem; margin-bottom: 0;">🔥</div>
+                    </div>
+                </div>
+
+                <button class="battle-btn" onclick="createDragon()" style="width: 100%; margin-top: 10px;">Começar Jornada</button>
+            </div>
+        </div>
+
+        <!-- Tela Principal de Cuidados -->
+        <div id="main-screen" class="screen">
+            <header>
+                <div class="dragon-info">
+                    <h2 id="dragon-name-display" style="display:inline-block; margin-right: 8px;">Meu Dragão</h2>
+                    <button onclick="openEditModal()" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:0; box-shadow:none; font-size:1.2rem; transform: translateY(-2px);" title="Editar Dragão">✏️</button>
+                    <p id="dragon-type-display">Tipo: --</p>
+                    <p>Nível <span id="dragon-level">1</span></p>
+                </div>
+                <button class="battle-btn" onclick="openBattleScreen()">⚔️ Arena de Batalha</button>
+            </header>
+
+            <div class="stats-container">
+                <div class="stat-bar">
+                    <label>❤️ Saúde (<span id="health-val">100</span>%)</label>
+                    <div class="bar-bg"><div class="bar-fill health" id="bar-health"></div></div>
+                </div>
+                <div class="stat-bar">
+                    <label>🍗 Fome (<span id="hunger-val">100</span>%)</label>
+                    <div class="bar-bg"><div class="bar-fill hunger" id="bar-hunger"></div></div>
+                </div>
+                <div class="stat-bar">
+                    <label>⚡ Energia (<span id="energy-val">100</span>%)</label>
+                    <div class="bar-bg"><div class="bar-fill energy" id="bar-energy"></div></div>
+                </div>
+                <div class="stat-bar">
+                    <label>😊 Felicidade (<span id="happiness-val">100</span>%)</label>
+                    <div class="bar-bg"><div class="bar-fill happiness" id="bar-happiness"></div></div>
+                </div>
+            </div>
+
+            <div class="display-area">
+                <div id="egg-overlay" class="hidden">🥚</div>
+                <div id="main-dragon-avatar" class="dragon-avatar main-avatar">🐲</div>
+                <div class="status-message" id="status-message">Seu dragão está feliz!</div>
+            </div>
+
+            <div class="actions">
+                <button onclick="feedDragon()" class="action-btn">🍗 Alimentar</button>
+                <button onclick="sleepDragon()" class="action-btn">💤 Descansar</button>
+                <button onclick="playDragon()" class="action-btn">⚽ Brincar</button>
+            </div>
+            <button onclick="resetGame()" style="margin-top: 10px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #64748b; font-size: 0.8rem;">Adotar Novo Dragão</button>
+        </div>
+
+        <!-- Tela de Batalha -->
+        <div id="battle-screen" class="screen">
+            <h2>Arena de Combate</h2>
+            <div class="battle-arena">
+                <div class="fighter my-dragon">
+                    <h3>Seu Dragão</h3>
+                    <div id="battle-my-avatar" class="dragon-avatar battle-avatar">🐲</div>
+                    <div class="stat-bar">
+                        <label>HP</label>
+                        <div class="bar-bg"><div class="bar-fill health" id="battle-my-hp"></div></div>
+                    </div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="fighter enemy-dragon">
+                    <h3 id="enemy-name">Dragão Selvagem</h3>
+                    <div id="battle-enemy-avatar" class="dragon-avatar battle-avatar enemy">🐉</div>
+                    <div class="stat-bar">
+                        <label>HP</label>
+                        <div class="bar-bg"><div class="bar-fill health" id="battle-enemy-hp"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="battle-log" id="battle-log">O adversário te encara ferozmente! Preparar para a batalha...</div>
+            <div class="battle-actions" id="battle-actions">
+                <button onclick="attack()" class="action-btn attack-btn">Atacar</button>
+                <button onclick="defend()" class="action-btn defend-btn">Defender</button>
+                <button class="action-btn danger" onclick="flee()">Fugir da Batalha</button>
+            </div>
+            <button class="back-btn hidden action-btn" id="end-battle-btn" onclick="backToMain()">Voltar para Casa</button>
+        </div>
+
+        <!-- Modal de Edição -->
+        <div id="edit-modal" class="screen" style="background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; backdrop-filter: blur(5px);">
+            <div class="creation-form" style="width: 100%; max-width: 400px; margin: auto; border: 1px solid rgba(255,255,255,0.2);">
+                <h2 style="margin-bottom: 20px;">Editar Dragão</h2>
+                <div class="form-group">
+                    <label>Novo Nome</label>
+                    <input type="text" id="edit-dragon-name" maxlength="15">
+                </div>
+                <div class="form-group">
+                    <label>Nova Cor da Aura</label>
+                    <div style="display:flex; align-items: center; justify-content: center; gap: 20px;">
+                        <input type="color" id="edit-dragon-color">
+                        <div id="edit-preview-avatar" class="dragon-avatar" style="font-size: 3.5rem; margin-bottom: 0;">🐲</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="action-btn" onclick="closeEditModal()" style="flex:1;">Cancelar</button>
+                    <button class="battle-btn" onclick="saveEdit()" style="flex:1;">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

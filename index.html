@@ -121,8 +121,10 @@
             <div class="battle-log" id="battle-log">O adversário te encara ferozmente! Preparar para a batalha...</div>
             <div class="battle-actions" id="battle-actions">
                 <button onclick="attack()" class="action-btn attack-btn">Atacar</button>
-                <button onclick="defend()" class="action-btn defend-btn">Defender</button>
-                <button class="action-btn danger" onclick="flee()">Fugir da Batalha</button>
+                <button onclick="useFire()" class="action-btn" style="background:#fb923c;">Poder de Fogo</button>
+                <button onclick="useWater()" class="action-btn" style="background:#60a5fa;">Poder de Água</button>
+                <button onclick="defend()" class="action-btn defend-btn">Escudo de Força</button>
+                <button class="action-btn danger" onclick="flee()">Fugir</button>
             </div>
             <button class="back-btn hidden action-btn" id="end-battle-btn" onclick="backToMain()">Voltar para Casa</button>
         </div>

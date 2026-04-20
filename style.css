@@ -10,6 +10,7 @@
     --hunger: #f59e0b;
     --energy: #3b82f6;
     --happiness: #10b981;
+    --extra-health: #fbbf24;
     
     --fire: #fb923c;
     --water: #60a5fa;
@@ -328,6 +329,7 @@ button.battle-btn:hover {
 .bar-fill.hunger { background: var(--hunger); box-shadow: 0 0 10px rgba(245,158,11,0.5); }
 .bar-fill.energy { background: var(--energy); box-shadow: 0 0 10px rgba(59,130,246,0.5); }
 .bar-fill.happiness { background: var(--happiness); box-shadow: 0 0 10px rgba(16,185,129,0.5); }
+.bar-fill.extra-health { background: var(--extra-health); box-shadow: 0 0 15px rgba(251,191,36,0.6); }
 
 /* Display Area */
 .display-area {

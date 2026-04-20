@@ -7,6 +7,7 @@ let dragon = {
     hunger: 100,
     energy: 100,
     happiness: 100,
+    extraHealth: 0,
     avatar: '🐲',
     color: '#fb923c'
 };
@@ -35,6 +36,7 @@ function init() {
     if (saved) {
         // Load existing game
         dragon = JSON.parse(saved);
+        if (dragon.extraHealth === undefined) dragon.extraHealth = 0;
         calculateOfflineDecay();
         showScreen('main');
         updateUI();
@@ -131,6 +133,7 @@ function createDragon() {
         hunger: 100,
         energy: 100,
         happiness: 100,
+        extraHealth: 0,
         avatar: selectedElementType === 'Fogo' ? '🔥' : selectedElementType === 'Água' ? '💧' : '🌿',
         color: colorInput
     };
@@ -210,6 +213,17 @@ function updateUI() {
     updateBar('hunger', dragon.hunger);
     updateBar('energy', dragon.energy);
     updateBar('happiness', dragon.happiness);
+    
+    // Extra Health UI (Main Screen)
+    const extraVal = document.getElementById('extra-health-val');
+    const extraContainer = document.getElementById('extra-health-container');
+    if (dragon.extraHealth > 0) {
+        extraContainer.classList.remove('hidden');
+        extraVal.innerText = dragon.extraHealth;
+        document.getElementById('bar-extra-health').style.width = `${Math.min(100, (dragon.extraHealth / 100) * 100)}%`;
+    } else {
+        extraContainer.classList.add('hidden');
+    }
 
     updateMessage();
 }
@@ -320,7 +334,10 @@ const enemies = [
     { name: "Golem Ancestral", avatar: "🪨", baseHp: 150 },
     { name: "Fênix Sombria", avatar: "🪶", baseHp: 120 },
     { name: "Serpente do Mar", avatar: "🐍", baseHp: 100 },
-    { name: "Dragão Corrompido", avatar: "🐲", baseHp: 200 }
+    { name: "Dragão Corrompido", avatar: "🐲", baseHp: 200 },
+    { name: "Lorde de Gelo", avatar: "❄️", baseHp: 250 },
+    { name: "Titã das Sombras", avatar: "🌑", baseHp: 300 },
+    { name: "Hydra de Fogo", avatar: "☄️", baseHp: 180 }
 ];
 
 function openBattleScreen() {
@@ -356,6 +373,15 @@ function openBattleScreen() {
 function updateBattleUI() {
     document.getElementById('battle-my-hp').style.width = `${(dragon.health / 100) * 100}%`;
     document.getElementById('battle-enemy-hp').style.width = `${(enemy.hp / enemy.maxHp) * 100}%`;
+    
+    // Extra Health (Battle Screen)
+    const battleExtraContainer = document.getElementById('battle-extra-health-container');
+    if (dragon.extraHealth > 0) {
+        battleExtraContainer.classList.remove('hidden');
+        document.getElementById('battle-my-extra-hp').style.width = `${Math.min(100, (dragon.extraHealth / 100) * 100)}%`;
+    } else {
+        battleExtraContainer.classList.add('hidden');
+    }
 }
 
 function logBattle(msg) {
@@ -399,7 +425,13 @@ function attack() {
 function defend() {
     if(!battleActive) return;
     dragon.energy = Math.min(100, dragon.energy + 15);
-    logBattle("🛡️ Você assumiu postura defensiva. Energia recuperada!");
+    
+    // Pequeno contra-ataque durante a defesa
+    let counterDmg = 5 + Math.floor(dragon.level * 1.5);
+    enemy.hp = Math.max(0, enemy.hp - counterDmg);
+    
+    logBattle(`🛡️ Postura defensiva! Energia +15 e causou ${counterDmg} de contra-ataque!`);
+    updateBattleUI();
     enemyTurn(true); 
 }
 
@@ -415,19 +447,35 @@ function enemyTurn(playerDefending = false) {
     btns.forEach(b => b.disabled = true);
 
     setTimeout(() => {
-        let dmg = 12 + Math.floor(Math.random() * 8) + (dragon.level * 2);
+        let dmg = 15 + Math.floor(Math.random() * 12) + (dragon.level * 4);
         
         if(playerDefending) {
-            dmg = Math.floor(dmg * 0.3); // 70% damage reduction when defending
+            dmg = Math.floor(dmg * 0.25); // 75% damage reduction when defending
             logBattle("Seu escudo bloqueou grande parte do dano.");
         }
         
         if(!playerDefending && dragon.type === 'Terra') {
-            dmg = Math.floor(dmg * 0.8); // Terra tem 20% de defesa passiva
+            dmg = Math.floor(dmg * 0.7); // Terra agora tem 30% de defesa passiva
         }
         
-        dragon.health = Math.max(0, dragon.health - dmg);
-        logBattle(`👾 O inimigo atacou sentando-lhe a mão! ${dmg} de dano!`);
+        // Lógica de Vida Extra (Escudo)
+        if (dragon.extraHealth > 0) {
+            if (dragon.extraHealth >= dmg) {
+                dragon.extraHealth -= dmg;
+                logBattle(`🛡️ O Escudo de Alma absorveu ${dmg} de dano!`);
+                dmg = 0;
+            } else {
+                let absorbed = dragon.extraHealth;
+                dmg -= absorbed;
+                dragon.extraHealth = 0;
+                logBattle(`🛡️ O Escudo de Alma quebrou! Absorveu ${absorbed} de dano.`);
+            }
+        }
+        
+        if (dmg > 0) {
+            dragon.health = Math.max(0, dragon.health - dmg);
+            logBattle(`👾 O inimigo atacou ferozmente! ${dmg} de dano!`);
+        }
         updateBattleUI();
         playAnim('battle-my-avatar', 'shake');
         
@@ -456,7 +504,10 @@ function winBattle() {
     // Heals a bit as reward
     dragon.health = Math.min(100, dragon.health + 30);
     
-    logBattle(`🎉 SUBIU PARA O NÍVEL ${dragon.level}!`);
+    // VIDA EXTRA RECOMPENSA
+    dragon.extraHealth += 50;
+    
+    logBattle(`🎉 SUBIU PARA O NÍVEL ${dragon.level}! Ganhou +50 de Vida Extra!`);
     saveState();
     updateUI();
     document.getElementById('battle-actions').classList.add('hidden');

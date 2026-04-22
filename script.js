@@ -1,5 +1,5 @@
-// Game State
 let dragon = {
+    species: 'Dragão',
     type: null,
     name: "Meu Dragão",
     level: 1,
@@ -7,6 +7,7 @@ let dragon = {
     hunger: 100,
     energy: 100,
     happiness: 100,
+    hygiene: 100,
     extraHealth: 0,
     avatar: '🐲',
     color: '#fb923c'
@@ -37,6 +38,7 @@ function init() {
         // Load existing game
         dragon = JSON.parse(saved);
         if (dragon.extraHealth === undefined) dragon.extraHealth = 0;
+        if (dragon.hygiene === undefined) dragon.hygiene = 100;
         calculateOfflineDecay();
         showScreen('main');
         updateUI();
@@ -61,6 +63,7 @@ function calculateOfflineDecay() {
             dragon.hunger = Math.max(0, dragon.hunger - decayAmount);
             dragon.energy = Math.max(0, dragon.energy - decayAmount);
             dragon.happiness = Math.max(0, dragon.happiness - decayAmount);
+            dragon.hygiene = Math.max(0, dragon.hygiene - decayAmount);
             
             // Health only decays if hunger or energy hit 0
             if (dragon.hunger === 0 || dragon.energy === 0) {
@@ -76,6 +79,36 @@ function showScreen(screenName) {
 }
 
 let selectedElementType = 'Fogo';
+let selectedSpecies = 'Dragão';
+let selectedAvatar = '🐲';
+
+function chooseSpecies(species, avatar) {
+    selectedSpecies = species;
+    selectedAvatar = avatar;
+    
+    const cards = document.querySelectorAll('#species-selection .dragon-card');
+    cards.forEach(card => card.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+    
+    const preview = document.getElementById('preview-avatar');
+    preview.innerText = avatar;
+}
+
+function setQuickColor(color) {
+    const colorInput = document.getElementById('new-dragon-color');
+    if (colorInput) {
+        colorInput.value = color;
+        document.getElementById('preview-avatar').style.textShadow = `0 0 25px ${color}`;
+    }
+}
+
+function setQuickColorEdit(color) {
+    const colorInput = document.getElementById('edit-dragon-color');
+    if (colorInput) {
+        colorInput.value = color;
+        document.getElementById('edit-preview-avatar').style.textShadow = `0 0 25px ${color}`;
+    }
+}
 
 function chooseElement(type) {
     selectedElementType = type;
@@ -85,17 +118,19 @@ function chooseElement(type) {
     cards.forEach(card => card.classList.remove('selected'));
     event.currentTarget.classList.add('selected');
     
-    // update preview
-    const preview = document.getElementById('preview-avatar');
-    if(type === 'Fogo') preview.innerText = '🔥';
-    if(type === 'Água') preview.innerText = '💧';
-    if(type === 'Terra') preview.innerText = '🌿';
-    
-    // recommend a color change depending on element if user hasn't chosen one
+    // update preview (optional, elements usually have colors)
+    // recommend a color change depending on element
     const colorInput = document.getElementById('new-dragon-color');
+    const preview = document.getElementById('preview-avatar');
+
     if (type === 'Fogo') colorInput.value = '#fb923c';
     if (type === 'Água') colorInput.value = '#60a5fa';
     if (type === 'Terra') colorInput.value = '#34d399';
+    if (type === 'Trovão') colorInput.value = '#facc15';
+    if (type === 'Gelo') colorInput.value = '#93c5fd';
+    if (type === 'Luz') colorInput.value = '#fde047';
+    if (type === 'Sombra') colorInput.value = '#a855f7';
+    
     preview.style.textShadow = `0 0 25px ${colorInput.value}`;
 }
 
@@ -126,6 +161,7 @@ function createDragon() {
     }
 
     dragon = {
+        species: selectedSpecies,
         type: selectedElementType,
         name: nameInput,
         level: 1,
@@ -133,8 +169,9 @@ function createDragon() {
         hunger: 100,
         energy: 100,
         happiness: 100,
+        hygiene: 100,
         extraHealth: 0,
-        avatar: selectedElementType === 'Fogo' ? '🔥' : selectedElementType === 'Água' ? '💧' : '🌿',
+        avatar: selectedAvatar,
         color: colorInput
     };
     
@@ -187,10 +224,20 @@ function saveEdit() {
 function updateUI() {
     // Top Info
     document.getElementById('dragon-name-display').innerText = dragon.name;
-    document.getElementById('dragon-type-display').innerText = `Dragão de ${dragon.type}`;
+    document.getElementById('dragon-type-display').innerText = `${dragon.species} de ${dragon.type}`;
     document.getElementById('dragon-level').innerText = dragon.level;
     
-    const displayAvatar = dragon.level > 5 ? '🐉' : dragon.avatar; // Evolves at level 6
+    const evolutions = {
+        'Dragão': '🐉',
+        'Grifo': '🦁',
+        'Unicórnio': '🦄',
+        'Fênix': '🦅',
+        'Lobo': '🐺'
+    };
+    
+    // For now, let's just use the base avatar if no evolution is defined, 
+    // but Dragão still evolves to 🐉
+    const displayAvatar = (dragon.level > 5 && dragon.species === 'Dragão') ? '🐉' : dragon.avatar;
     document.getElementById('main-dragon-avatar').innerText = displayAvatar;
     document.getElementById('battle-my-avatar').innerText = displayAvatar;
 
@@ -213,6 +260,7 @@ function updateUI() {
     updateBar('hunger', dragon.hunger);
     updateBar('energy', dragon.energy);
     updateBar('happiness', dragon.happiness);
+    updateBar('hygiene', dragon.hygiene);
     
     // Extra Health UI (Main Screen)
     const extraVal = document.getElementById('extra-health-val');
@@ -248,6 +296,7 @@ function updateMessage() {
     else if (dragon.hunger < 30) msg.innerText = "Sua barriga está roncando... Alimente-o!";
     else if (dragon.energy < 30) msg.innerText = "Ele está exausto. Precisa descansar.";
     else if (dragon.happiness < 30) msg.innerText = "Ele parece solitário. Brinque um pouco.";
+    else if (dragon.hygiene < 30) msg.innerText = "Ugh... Ele está bem sujo. Banho imediato!";
     else {
         const happyMsgs = ["Seu dragão está feliz e forte!", "Pronto para qualquer batalha!", "Um belo dia para voar."];
         msg.innerText = happyMsgs[Math.floor(Math.random() * happyMsgs.length)];
@@ -267,9 +316,10 @@ function startDecay() {
         dragon.hunger = Math.max(0, dragon.hunger - 1);
         dragon.energy = Math.max(0, dragon.energy - 0.5);
         dragon.happiness = Math.max(0, dragon.happiness - 1);
+        dragon.hygiene = Math.max(0, dragon.hygiene - 1.5);
         
         // Consequence of neglect
-        if (dragon.hunger === 0 || dragon.energy === 0) {
+        if (dragon.hunger === 0 || dragon.energy === 0 || dragon.hygiene === 0) {
             dragon.health = Math.max(0, dragon.health - 2);
         }
 
@@ -291,13 +341,52 @@ function playAnim(elementId, animClass) {
     el.classList.add(animClass);
 }
 
-function feedDragon() {
-    if(dragon.health === 0 && dragon.hunger > 50) return; // Prevent overfeeding a fainted dragon
-    dragon.hunger = Math.min(100, dragon.hunger + 25);
-    dragon.happiness = Math.min(100, dragon.happiness + 5);
-    dragon.health = Math.min(100, dragon.health + 5); 
+function feedDragon(foodType) {
+    if(dragon.health === 0 && dragon.hunger > 50) return;
+    
+    let stats = { hunger: 0, health: 0, happiness: 0, hygiene: 0, energy: 0 };
+    let msg = "";
+
+    switch(foodType) {
+        case 'Carne':
+            stats = { hunger: 30, health: 5, happiness: 5, hygiene: -5 };
+            msg = "Você deu uma carne suculenta. Ele adorou!";
+            break;
+        case 'Maçã':
+            stats = { hunger: 15, health: 10, happiness: 5, hygiene: 0 };
+            msg = "Uma maçã fresquinha. Muito saudável!";
+            break;
+        case 'Pizza':
+            stats = { hunger: 50, health: -5, happiness: 10, hygiene: -20 };
+            msg = "Pizza! Muita energia, mas que sujeira ele fez!";
+            break;
+        case 'Sushi':
+            stats = { hunger: 25, health: 5, happiness: 10, hygiene: 0, energy: 10 };
+            msg = "Sushi premium! Ele se sente revigorado.";
+            break;
+        case 'Sorvete':
+            stats = { hunger: 10, health: -2, happiness: 25, hygiene: -10 };
+            msg = "Um sorvete geladinho. Felicidade pura!";
+            break;
+    }
+
+    dragon.hunger = Math.min(100, dragon.hunger + (stats.hunger || 0));
+    dragon.health = Math.min(100, dragon.health + (stats.health || 0));
+    dragon.happiness = Math.min(100, dragon.happiness + (stats.happiness || 0));
+    dragon.hygiene = Math.min(100, dragon.hygiene + (stats.hygiene || 0));
+    dragon.energy = Math.min(100, dragon.energy + (stats.energy || 0));
+
     playAnim('main-dragon-avatar', 'shake');
-    logMessage("Você deu uma carne suculenta. Ele adorou!");
+    logMessage(msg);
+    updateUI();
+    saveState();
+}
+
+function bathDragon() {
+    dragon.hygiene = 100;
+    dragon.happiness = Math.min(100, dragon.happiness + 10);
+    playAnim('main-dragon-avatar', 'floating'); // Reuse floating logic as "joy"
+    logMessage("🛁 Hora do banho! Ele está limpinho e cheiroso.");
     updateUI();
     saveState();
 }
@@ -337,7 +426,19 @@ const enemies = [
     { name: "Dragão Corrompido", avatar: "🐲", baseHp: 200 },
     { name: "Lorde de Gelo", avatar: "❄️", baseHp: 250 },
     { name: "Titã das Sombras", avatar: "🌑", baseHp: 300 },
-    { name: "Hydra de Fogo", avatar: "☄️", baseHp: 180 }
+    { name: "Hydra de Fogo", avatar: "☄️", baseHp: 180 },
+    { name: "Viral de Código", avatar: "👾", baseHp: 100 },
+    { name: "Mech-Rex", avatar: "🤖", baseHp: 220 },
+    { name: "Kraken Abissal", avatar: "🐙", baseHp: 190 },
+    { name: "Escorpião Rei", avatar: "🦂", baseHp: 140 },
+    { name: "Quimera Real", avatar: "🦁", baseHp: 170 },
+    { name: "Fantasma da Ópera", avatar: "👻", baseHp: 110 },
+    { name: "Rei das Neves", avatar: "🏔️", baseHp: 240 },
+    { name: "Magma Elemental", avatar: "🌋", baseHp: 210 },
+    { name: "Morcego Vampiro", avatar: "🦇", baseHp: 130 },
+    { name: "Tigre Raivoso", avatar: "🐯", baseHp: 160 },
+    { name: "Zumbido Infernal", avatar: "🦟", baseHp: 90 },
+    { name: "Nave-mãe Alien", avatar: "🛸", baseHp: 280 }
 ];
 
 function openBattleScreen() {
@@ -401,11 +502,36 @@ function attack() {
     
     setTimeout(() => {
         let baseDmg = 15 + Math.floor(Math.random() * 10);
-        let levelMod = (dragon.level * 3);
+        let levelMod = (dragon.level * 7); // Aumentado significativamente
         let dmg = baseDmg + levelMod;
         
+        // Bônus de Evolução (Nível 6+)
+        if (dragon.level >= 6) {
+            dmg = Math.floor(dmg * 1.5);
+        }
+        
         // Element strategy
-        if (dragon.type === 'Fogo') dmg = Math.floor(dmg * 1.2); // Fogo dá 20% mais dano
+        if (dragon.type === 'Fogo') dmg = Math.floor(dmg * 1.2);
+        if (dragon.type === 'Sombra') {
+            dmg = Math.floor(dmg * 1.5);
+            dragon.health = Math.max(5, dragon.health - 10);
+            logBattle("🌑 Poder das Sombras! Dano massivo em troca de vida.");
+        }
+        if (dragon.type === 'Veneno') {
+            let poisonDmg = Math.floor(dmg * 0.25);
+            enemy.hp = Math.max(0, enemy.hp - poisonDmg);
+            logBattle(`🤢 Tokina Venenosa! +${poisonDmg} de dano persistente.`);
+        }
+        if (dragon.type === 'Caos') {
+            const chaosEffects = ['Fogo', 'Trovão', 'Luz', 'Veneno', 'Sombra'];
+            const effect = chaosEffects[Math.floor(Math.random() * chaosEffects.length)];
+            logBattle(`🌀 CAOS! Manifestando poder de ${effect}!`);
+            if (effect === 'Fogo') dmg = Math.floor(dmg * 1.3);
+            if (effect === 'Trovão') logBattle("⚡ Faísca Caótica detectada!"); // Extra luck handles it below
+            if (effect === 'Luz') dragon.health = Math.min(100, dragon.health + 10);
+            if (effect === 'Veneno') enemy.hp = Math.max(0, enemy.hp - 10);
+            if (effect === 'Sombra') dmg = Math.floor(dmg * 1.4);
+        }
 
         let isCrit = Math.random() > 0.8;
         if(isCrit) {
@@ -414,10 +540,25 @@ function attack() {
         
         enemy.hp = Math.max(0, enemy.hp - dmg);
         logBattle(`💥 ${isCrit ? 'CRÍTICO! ' : ''}Você atacou causando ${dmg} de dano!`);
+        
+        if (dragon.type === 'Luz') {
+            let heal = Math.floor(dmg * 0.2);
+            dragon.health = Math.min(100, dragon.health + heal);
+            logBattle(`✨ Luz Curativa! Você regenerou ${heal} HP.`);
+        }
+
         updateBattleUI();
         playAnim('battle-enemy-avatar', 'shake');
         
         checkBattleState();
+        
+        // Thunder logic: 20% chance for double attack
+        if (battleActive && dragon.type === 'Trovão' && Math.random() < 0.2) {
+            logBattle("⚡ VELOCIDADE DO TROVÃO! Ataque duplo!");
+            setTimeout(attack, 1000);
+            return; // Exit current attack flow to avoid overlapping
+        }
+
         if(battleActive) enemyTurn();
     }, 400); // Wait for anim
 }
@@ -442,12 +583,38 @@ function flee() {
 }
 
 function enemyTurn(playerDefending = false) {
-    // Disable buttons so player cant spam
     const btns = document.querySelectorAll('.battle-actions button');
     btns.forEach(b => b.disabled = true);
 
+    // Ar: Evasão
+    if (!playerDefending && dragon.type === 'Ar' && Math.random() < 0.20) {
+        setTimeout(() => {
+            logBattle("💨 VENTANIA! Você se moveu como o vento e DESVIOU do ataque!");
+            btns.forEach(b => b.disabled = false);
+            checkBattleState();
+        }, 800);
+        return;
+    }
+
+    // Gelo: Congelar
+    if (!playerDefending && dragon.type === 'Gelo' && Math.random() < 0.15) {
+        setTimeout(() => {
+            logBattle("❄️ O inimigo está CONGELADO e perdeu o turno!");
+            btns.forEach(b => b.disabled = false);
+            checkBattleState();
+        }, 1000);
+        return;
+    }
+
+    // Psíquico: Confusão
+    let enemyConfused = (!playerDefending && dragon.type === 'Psíquico' && Math.random() < 0.15);
+
     setTimeout(() => {
         let dmg = 15 + Math.floor(Math.random() * 12) + (dragon.level * 4);
+        
+        // Defesa Escalonada por Nível (O animal fica mais ríspido e resistente)
+        let levelDefense = dragon.level * 2;
+        dmg = Math.max(1, dmg - levelDefense);
         
         if(playerDefending) {
             dmg = Math.floor(dmg * 0.25); // 75% damage reduction when defending
@@ -455,7 +622,26 @@ function enemyTurn(playerDefending = false) {
         }
         
         if(!playerDefending && dragon.type === 'Terra') {
-            dmg = Math.floor(dmg * 0.7); // Terra agora tem 30% de defesa passiva
+            dmg = Math.floor(dmg * 0.7);
+        }
+
+        if(!playerDefending && dragon.type === 'Metal') {
+            dmg = Math.floor(dmg * 0.6); // 40% de redução
+            logBattle("🔩 Armadura de Metal! Dano recebido reduzido.");
+        }
+
+        // Cristal: Reflexão
+        if (!playerDefending && dragon.type === 'Cristal') {
+            let reflectDmg = Math.floor(dmg * 0.25);
+            enemy.hp = Math.max(0, enemy.hp - reflectDmg);
+            logBattle(`💎 Pele de Cristal! Refletiu ${reflectDmg} de dano ao inimigo.`);
+        }
+
+        // Psíquico: Efeito final
+        if (enemyConfused) {
+            enemy.hp = Math.max(0, enemy.hp - dmg);
+            logBattle(`🧠 CONFUSÃO MENTAL! O inimigo ficou confuso e atacou a si mesmo por ${dmg} de dano!`);
+            dmg = 0;
         }
         
         // Lógica de Vida Extra (Escudo)
@@ -501,17 +687,21 @@ function winBattle() {
     dragon.level++;
     dragon.happiness = 100;
     
-    // Heals a bit as reward
-    dragon.health = Math.min(100, dragon.health + 30);
+    // Recompensas de Level Up melhoradas
+    dragon.health = Math.min(100, dragon.health + 50); // Recupera 50% de HP
     
-    // VIDA EXTRA RECOMPENSA
-    dragon.extraHealth += 50;
+    // VIDA EXTRA ESCALONADA
+    let extraGain = 50 + (dragon.level * 10);
+    dragon.extraHealth += extraGain;
     
-    logBattle(`🎉 SUBIU PARA O NÍVEL ${dragon.level}! Ganhou +50 de Vida Extra!`);
+    logBattle(`🎉 LEVEL UP! NÍVEL ${dragon.level}!`);
+    logBattle(`💪 Sua força aumentou! Ganhou +${extraGain} de Vida Extra.`);
     saveState();
     updateUI();
     document.getElementById('battle-actions').classList.add('hidden');
-    document.getElementById('end-battle-btn').classList.remove('hidden');
+    
+    // Volta automático após 2.5 segundos
+    setTimeout(backToMain, 2500);
 }
 
 function loseBattle() {
@@ -520,15 +710,19 @@ function loseBattle() {
     saveState();
     updateUI();
     document.getElementById('battle-actions').classList.add('hidden');
-    document.getElementById('end-battle-btn').classList.remove('hidden');
+    
+    // Volta automático após 2 segundos
+    setTimeout(backToMain, 2000);
 }
 
 function endBattle() {
     battleActive = false;
     document.getElementById('battle-actions').classList.add('hidden');
-    document.getElementById('end-battle-btn').classList.remove('hidden');
     saveState();
     updateUI();
+    
+    // Volta automático após 1.5 segundos
+    setTimeout(backToMain, 1500);
 }
 
 function backToMain() {

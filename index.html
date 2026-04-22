@@ -22,8 +22,94 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Elemento Primário</label>
-                    <div class="dragon-options grid" id="element-selection">
+                    <label>Espécie Mística</label>
+                    <div class="dragon-options grid" id="species-selection">
+                        <div class="dragon-card mini selected" onclick="chooseSpecies('Dragão', '🐲')">
+                            <span class="dragon-avatar miniature">🐲</span>
+                            <p>Dragão</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Lobo', '🐺')">
+                            <span class="dragon-avatar miniature">🐺</span>
+                            <p>Lobo</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Tigre', '🐯')">
+                            <span class="dragon-avatar miniature">🐯</span>
+                            <p>Tigre</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Raposa', '🦊')">
+                            <span class="dragon-avatar miniature">🦊</span>
+                            <p>Raposa</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Tartaruga', '🐢')">
+                            <span class="dragon-avatar miniature">🐢</span>
+                            <p>Tartaruga</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Panda', '🐼')">
+                            <span class="dragon-avatar miniature">🐼</span>
+                            <p>Panda</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Morcego', '🦇')">
+                            <span class="dragon-avatar miniature">🦇</span>
+                            <p>Morcego</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Unicórnio', '🦄')">
+                            <span class="dragon-avatar miniature">🦄</span>
+                            <p>Unicórnio</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Fênix', '🦅')">
+                            <span class="dragon-avatar miniature">🦅</span>
+                            <p>Fênix</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Grifo', '🦁')">
+                            <span class="dragon-avatar miniature">🦁</span>
+                            <p>Grifo</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Coala', '🐨')">
+                            <span class="dragon-avatar miniature">🐨</span>
+                            <p>Coala</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Preguiça', '🦥')">
+                            <span class="dragon-avatar miniature">🦥</span>
+                            <p>Preguiça</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Elefante', '🐘')">
+                            <span class="dragon-avatar miniature">🐘</span>
+                            <p>Elefante</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Girafa', '🦒')">
+                            <span class="dragon-avatar miniature">🦒</span>
+                            <p>Girafa</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Coruja', '🦉')">
+                            <span class="dragon-avatar miniature">🦉</span>
+                            <p>Coruja</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Aranha', '🕷️')">
+                            <span class="dragon-avatar miniature">🕷️</span>
+                            <p>Aranha</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Polvo', '🐙')">
+                            <span class="dragon-avatar miniature">🐙</span>
+                            <p>Polvo</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Dino', '🦖')">
+                            <span class="dragon-avatar miniature">🦖</span>
+                            <p>Dino</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Leão', '🦁')">
+                            <span class="dragon-avatar miniature">🦁</span>
+                            <p>Leão</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseSpecies('Borboleta', '🦋')">
+                            <span class="dragon-avatar miniature">🦋</span>
+                            <p>Borboleta</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Elemento e Poder</label>
+                    <div class="dragon-options grid elements-grid" id="element-selection">
                         <div class="dragon-card mini selected" onclick="chooseElement('Fogo')">
                             <span class="dragon-avatar miniature fire">🔥</span>
                             <p>Fogo</p>
@@ -36,14 +122,70 @@
                             <span class="dragon-avatar miniature earth">🌿</span>
                             <p>Terra</p>
                         </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Trovão')">
+                            <span class="dragon-avatar miniature thunder">⚡</span>
+                            <p>Trovão</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Gelo')">
+                            <span class="dragon-avatar miniature ice">❄️</span>
+                            <p>Gelo</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Luz')">
+                            <span class="dragon-avatar miniature light">✨</span>
+                            <p>Luz</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Sombra')">
+                            <span class="dragon-avatar miniature shadow">🌑</span>
+                            <p>Sombra</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Ar')">
+                            <span class="dragon-avatar miniature air">💨</span>
+                            <p>Ar</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Veneno')">
+                            <span class="dragon-avatar miniature poison">🤢</span>
+                            <p>Veneno</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Metal')">
+                            <span class="dragon-avatar miniature metal">🔩</span>
+                            <p>Metal</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Psíquico')">
+                            <span class="dragon-avatar miniature psychic">🧠</span>
+                            <p>Psíquico</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Cristal')">
+                            <span class="dragon-avatar miniature crystal">💎</span>
+                            <p>Cristal</p>
+                        </div>
+                        <div class="dragon-card mini" onclick="chooseElement('Caos')">
+                            <span class="dragon-avatar miniature chaos">🌀</span>
+                            <p>Caos</p>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Cor da Aura (Aparência)</label>
+                    <label>Cor do Animal (Aura)</label>
+                    <div class="color-presets" style="display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; flex-wrap: wrap; padding: 0 10px;">
+                        <button type="button" class="color-dot" style="background:#ef4444; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#ef4444')"></button>
+                        <button type="button" class="color-dot" style="background:#3b82f6; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#3b82f6')"></button>
+                        <button type="button" class="color-dot" style="background:#eab308; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#eab308')"></button>
+                        <button type="button" class="color-dot" style="background:#22c55e; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#22c55e')"></button>
+                        <button type="button" class="color-dot" style="background:#a855f7; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#a855f7')"></button>
+                        <button type="button" class="color-dot" style="background:#f97316; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#f97316')"></button>
+                        <button type="button" class="color-dot" style="background:#ec4899; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#ec4899')"></button>
+                        <button type="button" class="color-dot" style="background:#06b6d4; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#06b6d4')"></button>
+                        <button type="button" class="color-dot" style="background:#84cc16; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#84cc16')"></button>
+                        <button type="button" class="color-dot" style="background:#f8fafc; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#f8fafc')"></button>
+                        <button type="button" class="color-dot" style="background:#1e293b; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#1e293b')"></button>
+                        <button type="button" class="color-dot" style="background:#92400e; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#92400e')"></button>
+                        <button type="button" class="color-dot" style="background:#6366f1; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#6366f1')"></button>
+                        <button type="button" class="color-dot" style="background:#14b8a6; width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColor('#14b8a6')"></button>
+                    </div>
                     <div style="display:flex; align-items: center; justify-content: center; gap: 20px;">
                         <input type="color" id="new-dragon-color" value="#fb923c">
-                        <div id="preview-avatar" class="dragon-avatar" style="text-shadow: 0 0 25px #fb923c; font-size: 3.5rem; margin-bottom: 0;">🔥</div>
+                        <div id="preview-avatar" class="dragon-avatar" style="text-shadow: 0 0 25px #fb923c; font-size: 3.5rem; margin-bottom: 0;">🐲</div>
                     </div>
                 </div>
 
@@ -55,6 +197,8 @@
         <div id="main-screen" class="screen">
             <header>
                 <div class="dragon-info">
+                    <button onclick="resetGame()" style="background:transparent; border:1px solid rgba(255,255,255,0.1); color:var(--text-muted); padding:5px 10px; border-radius:8px; cursor:pointer; font-size:0.8rem; margin-bottom:10px;">⬅ Voltar à Criação</button>
+                    <br>
                     <h2 id="dragon-name-display" style="display:inline-block; margin-right: 8px;">Meu Dragão</h2>
                     <button onclick="openEditModal()" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:0; box-shadow:none; font-size:1.2rem; transform: translateY(-2px);" title="Editar Dragão">✏️</button>
                     <p id="dragon-type-display">Tipo: --</p>
@@ -63,41 +207,71 @@
                 <button class="battle-btn" onclick="openBattleScreen()">⚔️ Arena de Batalha</button>
             </header>
 
-            <div class="stats-container">
-                <div class="stat-bar">
-                    <label>❤️ Saúde (<span id="health-val">100</span>%)</label>
-                    <div class="bar-bg"><div class="bar-fill health" id="bar-health"></div></div>
-                </div>
-                <div class="stat-bar" id="extra-health-container">
-                    <label>✨ Vida Extra (<span id="extra-health-val">0</span> HP)</label>
-                    <div class="bar-bg"><div class="bar-fill extra-health" id="bar-extra-health"></div></div>
-                </div>
-                <div class="stat-bar">
-                    <label>🍗 Fome (<span id="hunger-val">100</span>%)</label>
-                    <div class="bar-bg"><div class="bar-fill hunger" id="bar-hunger"></div></div>
-                </div>
-                <div class="stat-bar">
-                    <label>⚡ Energia (<span id="energy-val">100</span>%)</label>
-                    <div class="bar-bg"><div class="bar-fill energy" id="bar-energy"></div></div>
-                </div>
-                <div class="stat-bar">
-                    <label>😊 Felicidade (<span id="happiness-val">100</span>%)</label>
-                    <div class="bar-bg"><div class="bar-fill happiness" id="bar-happiness"></div></div>
-                </div>
-            </div>
+            <div class="main-grid-layout">
+                <aside class="sidebar">
+                    <div class="stats-container">
+                        <div class="stat-bar">
+                            <label>❤️ Saúde (<span id="health-val">100</span>%)</label>
+                            <div class="bar-bg"><div class="bar-fill health" id="bar-health"></div></div>
+                        </div>
+                        <div class="stat-bar" id="extra-health-container">
+                            <label>✨ Vida Extra (<span id="extra-health-val">0</span> HP)</label>
+                            <div class="bar-bg"><div class="bar-fill extra-health" id="bar-extra-health"></div></div>
+                        </div>
+                        <div class="stat-bar">
+                            <label>🍗 Fome (<span id="hunger-val">100</span>%)</label>
+                            <div class="bar-bg"><div class="bar-fill hunger" id="bar-hunger"></div></div>
+                        </div>
+                        <div class="stat-bar">
+                            <label>⚡ Energia (<span id="energy-val">100</span>%)</label>
+                            <div class="bar-bg"><div class="bar-fill energy" id="bar-energy"></div></div>
+                        </div>
+                        <div class="stat-bar">
+                            <label>😊 Felicidade (<span id="happiness-val">100</span>%)</label>
+                            <div class="bar-bg"><div class="bar-fill happiness" id="bar-happiness"></div></div>
+                        </div>
+                        <div class="stat-bar">
+                            <label>🧼 Limpeza (<span id="hygiene-val">100</span>%)</label>
+                            <div class="bar-bg"><div class="bar-fill hygiene" id="bar-hygiene"></div></div>
+                        </div>
+                    </div>
+                </aside>
 
-            <div class="display-area">
-                <div id="egg-overlay" class="hidden">🥚</div>
-                <div id="main-dragon-avatar" class="dragon-avatar main-avatar">🐲</div>
-                <div class="status-message" id="status-message">Seu dragão está feliz!</div>
-            </div>
+                <main class="center-content">
+                    <div class="display-area">
+                        <div id="egg-overlay" class="hidden">🥚</div>
+                        <div id="main-dragon-avatar" class="dragon-avatar main-avatar">🐲</div>
+                        <div class="status-message" id="status-message">Seu dragão está feliz!</div>
+                    </div>
+                </main>
 
-            <div class="actions">
-                <button onclick="feedDragon()" class="action-btn">🍗 Alimentar</button>
-                <button onclick="sleepDragon()" class="action-btn">💤 Descansar</button>
-                <button onclick="playDragon()" class="action-btn">⚽ Brincar</button>
+                <nav class="actions-panel">
+                    <div class="actions main-actions-grid">
+                        <div class="food-menu">
+                            <label>Alimentar</label>
+                            <div class="food-options">
+                                <button onclick="feedDragon('Carne')" class="food-btn" title="Carne (+30 Fome)">🥩</button>
+                                <button onclick="feedDragon('Maçã')" class="food-btn" title="Maçã (+15 Fome, +5 Saúde)">🍎</button>
+                                <button onclick="feedDragon('Pizza')" class="food-btn" title="Pizza (+50 Fome, -10 Higiene)">🍕</button>
+                                <button onclick="feedDragon('Sushi')" class="food-btn" title="Sushi (+25 Fome, +5 Energia)">🍣</button>
+                                <button onclick="feedDragon('Sorvete')" class="food-btn" title="Sorvete (+10 Fome, +20 Felicidade)">🍦</button>
+                            </div>
+                        </div>
+                        
+                        <div class="care-menu">
+                            <label>Cuidar</label>
+                            <div class="care-options">
+                                <button onclick="bathDragon()" class="action-btn">🧼 Banho</button>
+                                <button onclick="sleepDragon()" class="action-btn">💤 Sono</button>
+                                <button onclick="playDragon()" class="action-btn">⚽ Brincar</button>
+                            </div>
+                        </div>
+
+                        <button class="battle-btn" onclick="openBattleScreen()" style="width: 100%; margin-top: 10px; padding: 15px; font-size: 1.1rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4);">⚔️ ENTRAR NA ARENA</button>
+                    </div>
+                    <button onclick="resetGame()" class="reset-btn">Adotar Novo Pet</button>
+                </nav>
             </div>
-            <button onclick="resetGame()" style="margin-top: 10px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #64748b; font-size: 0.8rem;">Adotar Novo Dragão</button>
         </div>
 
         <!-- Tela de Batalha -->
@@ -131,7 +305,6 @@
                 <button onclick="defend()" class="action-btn defend-btn">Defender</button>
                 <button class="action-btn danger" onclick="flee()">Fugir da Batalha</button>
             </div>
-            <button class="back-btn hidden action-btn" id="end-battle-btn" onclick="backToMain()">Voltar para Casa</button>
         </div>
 
         <!-- Modal de Edição -->
@@ -143,7 +316,23 @@
                     <input type="text" id="edit-dragon-name" maxlength="15">
                 </div>
                 <div class="form-group">
-                    <label>Nova Cor da Aura</label>
+                    <label>Nova Cor do Animal</label>
+                    <div class="color-presets" style="display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" class="color-dot" style="background:#ef4444; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#ef4444')"></button>
+                        <button type="button" class="color-dot" style="background:#3b82f6; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#3b82f6')"></button>
+                        <button type="button" class="color-dot" style="background:#eab308; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#eab308')"></button>
+                        <button type="button" class="color-dot" style="background:#22c55e; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#22c55e')"></button>
+                        <button type="button" class="color-dot" style="background:#a855f7; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#a855f7')"></button>
+                        <button type="button" class="color-dot" style="background:#f97316; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#f97316')"></button>
+                        <button type="button" class="color-dot" style="background:#ec4899; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#ec4899')"></button>
+                        <button type="button" class="color-dot" style="background:#06b6d4; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#06b6d4')"></button>
+                        <button type="button" class="color-dot" style="background:#84cc16; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#84cc16')"></button>
+                        <button type="button" class="color-dot" style="background:#f8fafc; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#f8fafc')"></button>
+                        <button type="button" class="color-dot" style="background:#1e293b; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#1e293b')"></button>
+                        <button type="button" class="color-dot" style="background:#92400e; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#92400e')"></button>
+                        <button type="button" class="color-dot" style="background:#6366f1; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#6366f1')"></button>
+                        <button type="button" class="color-dot" style="background:#14b8a6; width:25px; height:25px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="setQuickColorEdit('#14b8a6')"></button>
+                    </div>
                     <div style="display:flex; align-items: center; justify-content: center; gap: 20px;">
                         <input type="color" id="edit-dragon-color">
                         <div id="edit-preview-avatar" class="dragon-avatar" style="font-size: 3.5rem; margin-bottom: 0;">🐲</div>

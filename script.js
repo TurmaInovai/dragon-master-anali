@@ -10,7 +10,8 @@ let dragon = {
     hygiene: 100,
     extraHealth: 0,
     avatar: '🐲',
-    color: '#fb923c'
+    color: '#fb923c',
+    dead: false
 };
 
 let enemy = {
@@ -39,6 +40,7 @@ function init() {
         dragon = JSON.parse(saved);
         if (dragon.extraHealth === undefined) dragon.extraHealth = 0;
         if (dragon.hygiene === undefined) dragon.hygiene = 100;
+        if (dragon.dead === undefined) dragon.dead = false;
         calculateOfflineDecay();
         showScreen('main');
         updateUI();
@@ -172,7 +174,8 @@ function createDragon() {
         hygiene: 100,
         extraHealth: 0,
         avatar: selectedAvatar,
-        color: colorInput
+        color: colorInput,
+        dead: false
     };
     
     showScreen('main');
@@ -274,6 +277,14 @@ function updateUI() {
     }
 
     updateMessage();
+
+    // Se o animal está morto, aplicar overlay de morte
+    if (dragon.dead) {
+        const displayArea = document.querySelector('.display-area');
+        if (displayArea && !displayArea.classList.contains('death-scene')) {
+            setTimeout(showDeathOverlay, 100);
+        }
+    }
 }
 
 function updateBar(stat, value) {
@@ -342,6 +353,10 @@ function playAnim(elementId, animClass) {
 }
 
 function feedDragon(foodType) {
+    if (dragon.dead) {
+        logMessage("💀 Seu animal não está mais aqui...");
+        return;
+    }
     if(dragon.health === 0 && dragon.hunger > 50) return;
     
     let stats = { hunger: 0, health: 0, happiness: 0, hygiene: 0, energy: 0 };
@@ -350,23 +365,23 @@ function feedDragon(foodType) {
     switch(foodType) {
         case 'Carne':
             stats = { hunger: 30, health: 5, happiness: 5, hygiene: -5 };
-            msg = "Você deu uma carne suculenta. Ele adorou!";
+            msg = "🥩 Que delícia! Ele devorou a carne!";
             break;
         case 'Maçã':
             stats = { hunger: 15, health: 10, happiness: 5, hygiene: 0 };
-            msg = "Uma maçã fresquinha. Muito saudável!";
+            msg = "🍎 Uma maçã fresquinha. Muito saudável!";
             break;
         case 'Pizza':
             stats = { hunger: 50, health: -5, happiness: 10, hygiene: -20 };
-            msg = "Pizza! Muita energia, mas que sujeira ele fez!";
+            msg = "🍕 Pizza! Muita energia, mas que sujeira ele fez!";
             break;
         case 'Sushi':
             stats = { hunger: 25, health: 5, happiness: 10, hygiene: 0, energy: 10 };
-            msg = "Sushi premium! Ele se sente revigorado.";
+            msg = "🍣 Sushi premium! Ele se sente revigorado.";
             break;
         case 'Sorvete':
             stats = { hunger: 10, health: -2, happiness: 25, hygiene: -10 };
-            msg = "Um sorvete geladinho. Felicidade pura!";
+            msg = "🍦 Um sorvete geladinho. Felicidade pura!";
             break;
     }
 
@@ -376,22 +391,54 @@ function feedDragon(foodType) {
     dragon.hygiene = Math.min(100, dragon.hygiene + (stats.hygiene || 0));
     dragon.energy = Math.min(100, dragon.energy + (stats.energy || 0));
 
-    playAnim('main-dragon-avatar', 'shake');
+    // Expressão de felicidade ao comer!
+    showHappyExpression();
     logMessage(msg);
     updateUI();
     saveState();
 }
 
+function showHappyExpression() {
+    const avatar = document.getElementById('main-dragon-avatar');
+    // Mostrar emojis felizes flutuando
+    const happyEmojis = ['😄', '🎉', '❤️', '⭐', '✨'];
+    const displayArea = document.querySelector('.display-area');
+    
+    // Animação de bounce no avatar
+    playAnim('main-dragon-avatar', 'happy-bounce');
+    
+    // Criar emojis flutuantes
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            const emoji = document.createElement('div');
+            emoji.classList.add('floating-emoji');
+            emoji.innerText = happyEmojis[Math.floor(Math.random() * happyEmojis.length)];
+            emoji.style.left = (20 + Math.random() * 60) + '%';
+            emoji.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+            displayArea.appendChild(emoji);
+            setTimeout(() => emoji.remove(), 1500);
+        }, i * 120);
+    }
+}
+
 function bathDragon() {
+    if (dragon.dead) {
+        logMessage("💀 Seu animal não está mais aqui...");
+        return;
+    }
     dragon.hygiene = 100;
     dragon.happiness = Math.min(100, dragon.happiness + 10);
-    playAnim('main-dragon-avatar', 'floating'); // Reuse floating logic as "joy"
+    playAnim('main-dragon-avatar', 'floating');
     logMessage("🛁 Hora do banho! Ele está limpinho e cheiroso.");
     updateUI();
     saveState();
 }
 
 function sleepDragon() {
+    if (dragon.dead) {
+        logMessage("💀 Seu animal não está mais aqui...");
+        return;
+    }
     dragon.energy = Math.min(100, dragon.energy + 40);
     dragon.hunger = Math.max(0, dragon.hunger - 10); 
     dragon.health = Math.min(100, dragon.health + 15);
@@ -401,6 +448,10 @@ function sleepDragon() {
 }
 
 function playDragon() {
+    if (dragon.dead) {
+        logMessage("💀 Seu animal não está mais aqui...");
+        return;
+    }
     if(dragon.energy < 20) {
         logMessage("Ele está muito cansado para brincar agora.");
         return;
@@ -409,9 +460,66 @@ function playDragon() {
     dragon.energy = Math.max(0, dragon.energy - 15);
     dragon.hunger = Math.max(0, dragon.hunger - 10);
     playAnim('main-dragon-avatar', 'shake');
-    logMessage("Vocês correram juntos. Diversão pura!");
+    logMessage("⚽ Hora de brincar! Que alegria!");
     updateUI();
     saveState();
+    
+    // Ativar cenário de brincadeira
+    activatePlayScene();
+}
+
+function activatePlayScene() {
+    const displayArea = document.querySelector('.display-area');
+    if (displayArea.classList.contains('play-scene')) return;
+    
+    displayArea.classList.add('play-scene');
+    
+    // Criar a bola
+    const ball = document.createElement('div');
+    ball.id = 'play-ball';
+    ball.innerText = '⚽';
+    ball.classList.add('play-ball');
+    displayArea.appendChild(ball);
+    
+    // Criar nuvens decorativas
+    const cloud1 = document.createElement('div');
+    cloud1.classList.add('play-cloud');
+    cloud1.innerText = '☁️';
+    cloud1.style.left = '10%';
+    cloud1.style.top = '10%';
+    cloud1.style.animationDelay = '0s';
+    displayArea.appendChild(cloud1);
+    
+    const cloud2 = document.createElement('div');
+    cloud2.classList.add('play-cloud');
+    cloud2.innerText = '☁️';
+    cloud2.style.right = '10%';
+    cloud2.style.top = '15%';
+    cloud2.style.animationDelay = '1.5s';
+    displayArea.appendChild(cloud2);
+    
+    // Criar árvores decorativas
+    const tree1 = document.createElement('div');
+    tree1.classList.add('play-tree');
+    tree1.innerText = '🌳';
+    tree1.style.left = '5%';
+    tree1.style.bottom = '10px';
+    displayArea.appendChild(tree1);
+    
+    const tree2 = document.createElement('div');
+    tree2.classList.add('play-tree');
+    tree2.innerText = '🌳';
+    tree2.style.right = '5%';
+    tree2.style.bottom = '10px';
+    displayArea.appendChild(tree2);
+    
+    // Remover cenário após 8 segundos
+    setTimeout(() => {
+        displayArea.classList.remove('play-scene');
+        document.getElementById('play-ball')?.remove();
+        document.querySelectorAll('.play-cloud').forEach(e => e.remove());
+        document.querySelectorAll('.play-tree').forEach(e => e.remove());
+    }, 8000);
 }
 
 // =======================
@@ -442,6 +550,10 @@ const enemies = [
 ];
 
 function openBattleScreen() {
+    if (dragon.dead) {
+        alert("💀 Seu animal morreu na batalha e não pode mais lutar. Adote um novo pet.");
+        return;
+    }
     if (dragon.health < 40 || dragon.energy < 30) {
         alert("Seu dragão está muito fraco para lutar. Recupere a saúde (>40) e a energia (>30) primeiro!");
         return;
@@ -706,13 +818,37 @@ function winBattle() {
 
 function loseBattle() {
     battleActive = false;
-    dragon.happiness = Math.max(0, dragon.happiness - 30);
+    dragon.dead = true;      // Marcado como morto permanentemente!
+    dragon.health = 0;
+    dragon.happiness = 0;
     saveState();
     updateUI();
     document.getElementById('battle-actions').classList.add('hidden');
+    logBattle("☠️ Seu animal MORREU em batalha! Você não poderá mais usá-lo.");
     
-    // Volta automático após 2 segundos
-    setTimeout(backToMain, 2000);
+    // Mostra overlay de morte na tela principal após retornar
+    setTimeout(() => {
+        backToMain();
+        setTimeout(showDeathOverlay, 500);
+    }, 2500);
+}
+
+function showDeathOverlay() {
+    const displayArea = document.querySelector('.display-area');
+    displayArea.classList.add('death-scene');
+    const avatar = document.getElementById('main-dragon-avatar');
+    avatar.style.filter = 'grayscale(100%) opacity(0.4)';
+    avatar.style.animation = 'none';
+    document.getElementById('status-message').innerText = '☠️ ' + dragon.name + ' morreu em batalha. Adote um novo pet.';
+    
+    // Desabilitar todos os botões de ação
+    document.querySelectorAll('.food-btn, .action-btn, .battle-btn').forEach(btn => {
+        if (!btn.classList.contains('reset-btn') && !btn.onclick?.toString().includes('resetGame')) {
+            btn.disabled = true;
+            btn.style.opacity = '0.4';
+            btn.style.cursor = 'not-allowed';
+        }
+    });
 }
 
 function endBattle() {
